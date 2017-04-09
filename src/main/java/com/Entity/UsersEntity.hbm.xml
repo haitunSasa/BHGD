@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.Entity.UsersEntity" table="users" schema="knowledge_sharing">
+        <id name="userId">
+            <column name="userId" sql-type="int(225)"/>
+        </id>
+        <property name="userAccount">
+            <column name="userAccount" sql-type="int(225)" not-null="true"/>
+        </property>
+        <property name="userPassword">
+            <column name="userPassword" sql-type="int(225)" not-null="true"/>
+        </property>
+    </class>
+</hibernate-mapping>

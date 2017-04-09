@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.Entity.EavesdropperAnswerEntity" table="eavesdropper_answer" schema="knowledge_sharing">
+        <id name="eavesdropperAnswerId">
+            <column name="eavesdropperAnswerId" sql-type="int(255)"/>
+        </id>
+        <property name="answerId">
+            <column name="answerId" sql-type="int(255)" not-null="true"/>
+        </property>
+        <property name="userId">
+            <column name="userId" sql-type="int(255)" not-null="true"/>
+        </property>
+        <property name="eavesdroppingTime">
+            <column name="eavesdroppingTime" sql-type="datetime" not-null="true"/>
+        </property>
+        <property name="isPaid">
+            <column name="isPaid" sql-type="smallint(6)" not-null="true"/>
+        </property>
+    </class>
+</hibernate-mapping>
