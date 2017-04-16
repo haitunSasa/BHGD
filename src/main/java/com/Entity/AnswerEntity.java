@@ -1,10 +1,13 @@
 package com.Entity;
 
+import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
- * Created by liyan on 2017/3/30.
+ * Created by liyan on 2017/4/16.
  */
+@Entity
+@Table(name = "answer", schema = "knowledge_sharing", catalog = "")
 public class AnswerEntity {
     private int answerId;
     private String answerContent;
@@ -13,6 +16,8 @@ public class AnswerEntity {
     private Timestamp answerTime;
     private Short isFree;
 
+    @Id
+    @Column(name = "answerId")
     public int getAnswerId() {
         return answerId;
     }
@@ -21,6 +26,8 @@ public class AnswerEntity {
         this.answerId = answerId;
     }
 
+    @Basic
+    @Column(name = "answerContent")
     public String getAnswerContent() {
         return answerContent;
     }
@@ -29,6 +36,8 @@ public class AnswerEntity {
         this.answerContent = answerContent;
     }
 
+    @Basic
+    @Column(name = "questionId")
     public Integer getQuestionId() {
         return questionId;
     }
@@ -37,6 +46,8 @@ public class AnswerEntity {
         this.questionId = questionId;
     }
 
+    @Basic
+    @Column(name = "userId")
     public Integer getUserId() {
         return userId;
     }
@@ -45,6 +56,8 @@ public class AnswerEntity {
         this.userId = userId;
     }
 
+    @Basic
+    @Column(name = "answerTime")
     public Timestamp getAnswerTime() {
         return answerTime;
     }
@@ -53,6 +66,8 @@ public class AnswerEntity {
         this.answerTime = answerTime;
     }
 
+    @Basic
+    @Column(name = "isFree")
     public Short getIsFree() {
         return isFree;
     }

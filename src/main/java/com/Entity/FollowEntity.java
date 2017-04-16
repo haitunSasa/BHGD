@@ -1,13 +1,19 @@
 package com.Entity;
 
+import javax.persistence.*;
+
 /**
- * Created by liyan on 2017/3/30.
+ * Created by liyan on 2017/4/16.
  */
+@Entity
+@Table(name = "follow", schema = "knowledge_sharing", catalog = "")
 public class FollowEntity {
     private int followId;
     private Integer userId;
     private Integer followUserId;
 
+    @Id
+    @Column(name = "followId")
     public int getFollowId() {
         return followId;
     }
@@ -16,6 +22,8 @@ public class FollowEntity {
         this.followId = followId;
     }
 
+    @Basic
+    @Column(name = "userId")
     public Integer getUserId() {
         return userId;
     }
@@ -24,6 +32,8 @@ public class FollowEntity {
         this.userId = userId;
     }
 
+    @Basic
+    @Column(name = "followUserId")
     public Integer getFollowUserId() {
         return followUserId;
     }

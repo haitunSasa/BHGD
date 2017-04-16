@@ -1,13 +1,19 @@
 package com.Entity;
 
+import javax.persistence.*;
+
 /**
- * Created by liyan on 2017/3/30.
+ * Created by liyan on 2017/4/16.
  */
+@Entity
+@Table(name = "users", schema = "knowledge_sharing", catalog = "")
 public class UsersEntity {
     private int userId;
-    private Integer userAccount;
-    private Integer userPassword;
+    private String userAccount;
+    private String userPassword;
 
+    @Id
+    @Column(name = "userId")
     public int getUserId() {
         return userId;
     }
@@ -16,19 +22,23 @@ public class UsersEntity {
         this.userId = userId;
     }
 
-    public Integer getUserAccount() {
+    @Basic
+    @Column(name = "userAccount")
+    public String getUserAccount() {
         return userAccount;
     }
 
-    public void setUserAccount(Integer userAccount) {
+    public void setUserAccount(String userAccount) {
         this.userAccount = userAccount;
     }
 
-    public Integer getUserPassword() {
+    @Basic
+    @Column(name = "userPassword")
+    public String getUserPassword() {
         return userPassword;
     }
 
-    public void setUserPassword(Integer userPassword) {
+    public void setUserPassword(String userPassword) {
         this.userPassword = userPassword;
     }
 

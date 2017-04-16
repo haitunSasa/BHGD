@@ -1,10 +1,13 @@
 package com.Entity;
 
+import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
- * Created by liyan on 2017/3/30.
+ * Created by liyan on 2017/4/16.
  */
+@Entity
+@Table(name = "eavesdropper_answer", schema = "knowledge_sharing", catalog = "")
 public class EavesdropperAnswerEntity {
     private int eavesdropperAnswerId;
     private Integer answerId;
@@ -12,6 +15,8 @@ public class EavesdropperAnswerEntity {
     private Timestamp eavesdroppingTime;
     private Short isPaid;
 
+    @Id
+    @Column(name = "eavesdropperAnswerId")
     public int getEavesdropperAnswerId() {
         return eavesdropperAnswerId;
     }
@@ -20,6 +25,8 @@ public class EavesdropperAnswerEntity {
         this.eavesdropperAnswerId = eavesdropperAnswerId;
     }
 
+    @Basic
+    @Column(name = "answerId")
     public Integer getAnswerId() {
         return answerId;
     }
@@ -28,6 +35,8 @@ public class EavesdropperAnswerEntity {
         this.answerId = answerId;
     }
 
+    @Basic
+    @Column(name = "userId")
     public Integer getUserId() {
         return userId;
     }
@@ -36,6 +45,8 @@ public class EavesdropperAnswerEntity {
         this.userId = userId;
     }
 
+    @Basic
+    @Column(name = "eavesdroppingTime")
     public Timestamp getEavesdroppingTime() {
         return eavesdroppingTime;
     }
@@ -44,6 +55,8 @@ public class EavesdropperAnswerEntity {
         this.eavesdroppingTime = eavesdroppingTime;
     }
 
+    @Basic
+    @Column(name = "isPaid")
     public Short getIsPaid() {
         return isPaid;
     }

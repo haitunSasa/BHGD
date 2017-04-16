@@ -1,10 +1,13 @@
 package com.Entity;
 
+import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
- * Created by liyan on 2017/3/30.
+ * Created by liyan on 2017/4/16.
  */
+@Entity
+@Table(name = "question", schema = "knowledge_sharing", catalog = "")
 public class QuestionEntity {
     private int questionId;
     private String questionTitle;
@@ -15,6 +18,8 @@ public class QuestionEntity {
     private Timestamp questionTime;
     private Integer userId;
 
+    @Id
+    @Column(name = "questionId")
     public int getQuestionId() {
         return questionId;
     }
@@ -23,6 +28,8 @@ public class QuestionEntity {
         this.questionId = questionId;
     }
 
+    @Basic
+    @Column(name = "questionTitle")
     public String getQuestionTitle() {
         return questionTitle;
     }
@@ -31,6 +38,8 @@ public class QuestionEntity {
         this.questionTitle = questionTitle;
     }
 
+    @Basic
+    @Column(name = "questionContent")
     public String getQuestionContent() {
         return questionContent;
     }
@@ -39,6 +48,8 @@ public class QuestionEntity {
         this.questionContent = questionContent;
     }
 
+    @Basic
+    @Column(name = "questionTypeId")
     public Integer getQuestionTypeId() {
         return questionTypeId;
     }
@@ -47,6 +58,8 @@ public class QuestionEntity {
         this.questionTypeId = questionTypeId;
     }
 
+    @Basic
+    @Column(name = "questionReward")
     public Integer getQuestionReward() {
         return questionReward;
     }
@@ -55,6 +68,8 @@ public class QuestionEntity {
         this.questionReward = questionReward;
     }
 
+    @Basic
+    @Column(name = "questionIsAnswer")
     public Integer getQuestionIsAnswer() {
         return questionIsAnswer;
     }
@@ -63,6 +78,8 @@ public class QuestionEntity {
         this.questionIsAnswer = questionIsAnswer;
     }
 
+    @Basic
+    @Column(name = "questionTime")
     public Timestamp getQuestionTime() {
         return questionTime;
     }
@@ -71,6 +88,8 @@ public class QuestionEntity {
         this.questionTime = questionTime;
     }
 
+    @Basic
+    @Column(name = "userId")
     public Integer getUserId() {
         return userId;
     }

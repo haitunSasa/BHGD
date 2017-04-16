@@ -69,6 +69,8 @@
 				 <prop key="hibernate.jdbc.use_scrollable_resultset">
 					false
 				 </prop>
+				<prop key="hibernate.connection.url">jdbc:mysql://139.224.54.233:3306/knowledge_sharing</prop>
+				<prop key="hibernate.connection.driver_class">com.mysql.jdbc.Driver</prop>
 			</props>
 		</property>
 

@@ -1,12 +1,18 @@
 package com.Entity;
 
+import javax.persistence.*;
+
 /**
- * Created by liyan on 2017/3/30.
+ * Created by liyan on 2017/4/16.
  */
+@Entity
+@Table(name = "question_type", schema = "knowledge_sharing", catalog = "")
 public class QuestionTypeEntity {
     private int questionTypeId;
     private String questionType;
 
+    @Id
+    @Column(name = "questionTypeId")
     public int getQuestionTypeId() {
         return questionTypeId;
     }
@@ -15,6 +21,8 @@ public class QuestionTypeEntity {
         this.questionTypeId = questionTypeId;
     }
 
+    @Basic
+    @Column(name = "questionType")
     public String getQuestionType() {
         return questionType;
     }

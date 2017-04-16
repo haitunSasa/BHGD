@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
-		"http://struts.apache.org/dtds/struts-2.1.dtd">
+        "http://struts.apache.org/dtds/struts-2.1.dtd">
 <struts>
 
-	<!-- 指定由spring负责action对象的创建,struts2委托spring管理 -->
-	<constant name="struts.objectFactory" value="spring" />
+    <!-- 指定由spring负责action对象的创建,struts2委托spring管理 -->
+    <constant name="struts.objectFactory" value="spring"/>
     <!-- 开启使用开发模式，详细错误提示 -->
     <constant name="struts.devMode" value="true"/>
     <!-- 指定每次配置文件更改后，自动重新加载 -->
@@ -14,67 +14,86 @@
     <!-- 每次HTTP请求系统都重新加载资源文件，有助于开发 -->
     <constant name="struts.i18n.reload" value="true"/>
     <!-- 请求参数的编码方式 -->
-    <constant name="struts.i18n.encoding" value="UTF-8" /> 
+    <constant name="struts.i18n.encoding" value="UTF-8"/>
     <!-- 国际化资源文件 -->
-    <constant name="struts.custom.i18n.resources" value="resources/content/Language" />
+    <constant name="struts.custom.i18n.resources" value="resources/content/Language"/>
     <!--  让struts2支持动态方法调用,为true时，就可以在struts.xml配置“*”的通配符，来动态调用action里的方法-->
-    <constant name="struts.enable.DynamicMethodInvocation" value="true" />   
+    <constant name="struts.enable.DynamicMethodInvocation" value="true"/>
     <!-- 允许标签中使用表达式语法 -->
-	<constant name="struts.tag.altSyntax" value="true" />
-	<!-- 对于WebLogic,Orion,OC4J此属性应该设置成true -->
-	<constant name="struts.dispatcher.parametersWorkaround" value="false" />
+    <constant name="struts.tag.altSyntax" value="true"/>
+    <!-- 对于WebLogic,Orion,OC4J此属性应该设置成true -->
+    <constant name="struts.dispatcher.parametersWorkaround" value="false"/>
     <constant name="struts.multipart.saveDir" value="/tmp"></constant>
     <constant name="struts.multipart.maxSize" value="900000000"/>
     <!-- 拦截器配置 -->
     <package name="interceptor" extends="struts-default">
-		<interceptors>    
-	    	<interceptor-stack name="myStack">     
-	     	<interceptor-ref name="defaultStack" />    
-	    </interceptor-stack>   
-	  </interceptors> 
-	  
-	  <!-- （这句是设置所有Action自动调用的拦截器堆栈） -->
-	   <default-interceptor-ref name="myStack"/>
-	  
-    </package>	
-    
-	 <package name="erroAction" extends="struts-default">
-			<default-action-ref name="notFound" />
-			<action name="notFound">
-			<result>/baseJSP/error/error404.jsp</result>
-			</action>
-	 </package>
-    <!-- PC端Action配置 -->
-	<package name="PC_Action" namespace="/" extends="interceptor,erroAction,json-default">
-	    <global-results>
-			<!-- 没有session -->
-			<result name="noSession">/index.jsp</result>
-			<!-- 所有Action中的error都返回这个结果 -->
-			<result name="erro">/baseJSP/error/error500.jsp</result>
-			<!-- 没有权限 -->
-			<!-- <result name="noSecurity">/error/noSecurity.jsp</result> -->
-			<result name="exception-error">/baseJSP/error/error500.jsp</result>
-			<!--struts抛异常-->
-			<result name="strutsException">/baseJSP/error/error500.jsp</result>
-		</global-results>
+        <interceptors>
+            <interceptor-stack name="myStack">
+                <interceptor-ref name="defaultStack"/>
+            </interceptor-stack>
+        </interceptors>
 
-		<global-exception-mappings>		
-			<exception-mapping result="strutsException" exception="java.lang.Exception"></exception-mapping>
-		</global-exception-mappings>
+        <!-- （这句是设置所有Action自动调用的拦截器堆栈） -->
+        <default-interceptor-ref name="myStack"/>
 
     </package>
-    
-    <!-- 移动端配置 继承json-default -->   
-    <package name="Action" namespace="/" >
-    
-    	<!-- 用户个人功能模块 -->
+
+    <package name="erroAction" extends="struts-default">
+        <default-action-ref name="notFound"/>
+        <action name="notFound">
+            <result>/baseJSP/error/error404.jsp</result>
+        </action>
+    </package>
+    <!-- PC端Action配置 -->
+    <package name="PC_Action" namespace="/" extends="interceptor,erroAction,json-default">
+        <global-results>
+            <!-- 没有session -->
+            <result name="noSession">/index.jsp</result>
+            <!-- 所有Action中的error都返回这个结果 -->
+            <result name="erro">/baseJSP/error/error500.jsp</result>
+            <!-- 没有权限 -->
+            <!-- <result name="noSecurity">/error/noSecurity.jsp</result> -->
+            <result name="exception-error">/baseJSP/error/error500.jsp</result>
+            <!--struts抛异常-->
+            <result name="strutsException">/baseJSP/error/error500.jsp</result>
+        </global-results>
+
+        <global-exception-mappings>
+            <exception-mapping result="strutsException" exception="java.lang.Exception"></exception-mapping>
+        </global-exception-mappings>
+
+        <!-- 用户板块 -->
+        <action name="user_*" class="com.Action.UserAction" method="{1}">
+            <result type="json"></result>
+        </action>
+        <!-- 提问板块 -->
+        <action name="question_*" class="com.Action.QuestionAction" method="{1}">
+            <result type="json"></result>
+        </action>
+        <!-- 回答板块 -->
+        <action name="answer_*" class="com.Action.AnswerAction" method="{1}">
+            <result type="json"></result>
+        </action>
+        <!-- 偷听板块-->
+        <action name="eavesdropper_*" class="com.Action.EavesdropperAction" method="{1}">
+            <result type="json"></result>
+        </action>
+        <!-- 关注板块  -->
+        <action name="follow_*" class="com.Action.FollowAction" method="{1}">
+            <result type="json"></result>
+        </action>
+    </package>
+
+    <!-- 移动端配置 继承json-default -->
+    <package name="Action" namespace="/">
+
+        <!-- 用户个人功能模块 -->
         <!--<action name="user_*" class="com.Action.UserAction" method="{1}">-->
-			  <!--<result type="json"></result>-->
+        <!--<result type="json"></result>-->
         <!--</action>-->
 
-   
+
     </package>
 
 
-
-</struts>    
+</struts>

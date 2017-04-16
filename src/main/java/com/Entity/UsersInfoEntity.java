@@ -1,11 +1,14 @@
 package com.Entity;
 
+import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
 
 /**
- * Created by liyan on 2017/3/30.
+ * Created by liyan on 2017/4/16.
  */
+@Entity
+@Table(name = "users_info", schema = "knowledge_sharing", catalog = "")
 public class UsersInfoEntity {
     private int userInfoId;
     private Integer userId;
@@ -17,7 +20,11 @@ public class UsersInfoEntity {
     private String userImg;
     private String token;
     private Double userReward;
+    private String userName;
+    private Integer role;
 
+    @Id
+    @Column(name = "userInfoId")
     public int getUserInfoId() {
         return userInfoId;
     }
@@ -26,6 +33,8 @@ public class UsersInfoEntity {
         this.userInfoId = userInfoId;
     }
 
+    @Basic
+    @Column(name = "userId")
     public Integer getUserId() {
         return userId;
     }
@@ -34,6 +43,8 @@ public class UsersInfoEntity {
         this.userId = userId;
     }
 
+    @Basic
+    @Column(name = "userAccount")
     public String getUserAccount() {
         return userAccount;
     }
@@ -42,6 +53,8 @@ public class UsersInfoEntity {
         this.userAccount = userAccount;
     }
 
+    @Basic
+    @Column(name = "userSex")
     public Short getUserSex() {
         return userSex;
     }
@@ -50,6 +63,8 @@ public class UsersInfoEntity {
         this.userSex = userSex;
     }
 
+    @Basic
+    @Column(name = "userbirthday")
     public Date getUserbirthday() {
         return userbirthday;
     }
@@ -58,6 +73,8 @@ public class UsersInfoEntity {
         this.userbirthday = userbirthday;
     }
 
+    @Basic
+    @Column(name = "userIntroduction")
     public String getUserIntroduction() {
         return userIntroduction;
     }
@@ -66,6 +83,8 @@ public class UsersInfoEntity {
         this.userIntroduction = userIntroduction;
     }
 
+    @Basic
+    @Column(name = "userRegisterTime")
     public Timestamp getUserRegisterTime() {
         return userRegisterTime;
     }
@@ -74,6 +93,8 @@ public class UsersInfoEntity {
         this.userRegisterTime = userRegisterTime;
     }
 
+    @Basic
+    @Column(name = "userImg")
     public String getUserImg() {
         return userImg;
     }
@@ -82,6 +103,8 @@ public class UsersInfoEntity {
         this.userImg = userImg;
     }
 
+    @Basic
+    @Column(name = "token")
     public String getToken() {
         return token;
     }
@@ -90,6 +113,8 @@ public class UsersInfoEntity {
         this.token = token;
     }
 
+    @Basic
+    @Column(name = "userReward")
     public Double getUserReward() {
         return userReward;
     }
@@ -134,5 +159,25 @@ public class UsersInfoEntity {
         result = 31 * result + (token != null ? token.hashCode() : 0);
         result = 31 * result + (userReward != null ? userReward.hashCode() : 0);
         return result;
+    }
+
+    @Basic
+    @Column(name = "userName")
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    @Basic
+    @Column(name = "Role")
+    public Integer getRole() {
+        return role;
+    }
+
+    public void setRole(Integer role) {
+        this.role = role;
     }
 }
