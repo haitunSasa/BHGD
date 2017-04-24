@@ -8,7 +8,7 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name = "answer", schema = "knowledge_sharing", catalog = "")
-public class AnswerEntity {
+public class Answer {
     private int answerId;
     private String answerContent;
     private Integer questionId;
@@ -81,7 +81,7 @@ public class AnswerEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        AnswerEntity that = (AnswerEntity) o;
+        Answer that = (Answer) o;
 
         if (answerId != that.answerId) return false;
         if (answerContent != null ? !answerContent.equals(that.answerContent) : that.answerContent != null)

@@ -7,7 +7,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "follow", schema = "knowledge_sharing", catalog = "")
-public class FollowEntity {
+public class Follow {
     private int followId;
     private Integer userId;
     private Integer followUserId;
@@ -47,7 +47,7 @@ public class FollowEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        FollowEntity that = (FollowEntity) o;
+        Follow that = (Follow) o;
 
         if (followId != that.followId) return false;
         if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;

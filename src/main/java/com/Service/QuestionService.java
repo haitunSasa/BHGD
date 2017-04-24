@@ -1,9 +1,12 @@
 package com.Service;
 
-import com.Entity.QuestionEntity;
+import com.Entity.Question;
+
+import java.util.List;
 
 /**
  * Created by liyan on 2017/4/16.
  */
-public interface QuestionService extends BaseServiceI<QuestionEntity>{
+public interface QuestionService extends BaseServiceI<Question>{
+    List<Question> getQuestionOrderByTime();
 }

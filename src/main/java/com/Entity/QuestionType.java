@@ -7,7 +7,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "question_type", schema = "knowledge_sharing", catalog = "")
-public class QuestionTypeEntity {
+public class QuestionType {
     private int questionTypeId;
     private String questionType;
 
@@ -36,7 +36,7 @@ public class QuestionTypeEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        QuestionTypeEntity that = (QuestionTypeEntity) o;
+        QuestionType that = (QuestionType) o;
 
         if (questionTypeId != that.questionTypeId) return false;
         if (questionType != null ? !questionType.equals(that.questionType) : that.questionType != null) return false;

@@ -1,9 +1,9 @@
 package com.Service;
 
-import com.Entity.EavesdropperAnswerEntity;
+import com.Entity.EavesdropperAnswer;
 
 /**
  * Created by liyan on 2017/4/16.
  */
-public interface EavesdropperAnswerService extends BaseServiceI<EavesdropperAnswerEntity> {
+public interface EavesdropperAnswerService extends BaseServiceI<EavesdropperAnswer> {
 }

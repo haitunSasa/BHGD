@@ -8,7 +8,7 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name = "authentication", schema = "knowledge_sharing", catalog = "")
-public class AuthenticationEntity {
+public class Authentication {
     private int authenticateId;
     private Timestamp authenticateTime;
     private Integer userId;
@@ -59,7 +59,7 @@ public class AuthenticationEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        AuthenticationEntity that = (AuthenticationEntity) o;
+        Authentication that = (Authentication) o;
 
         if (authenticateId != that.authenticateId) return false;
         if (authenticateTime != null ? !authenticateTime.equals(that.authenticateTime) : that.authenticateTime != null)

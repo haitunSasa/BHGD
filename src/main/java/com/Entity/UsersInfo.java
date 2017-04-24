@@ -9,7 +9,7 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name = "users_info", schema = "knowledge_sharing", catalog = "")
-public class UsersInfoEntity {
+public class UsersInfo {
     private int userInfoId;
     private Integer userId;
     private String userAccount;
@@ -128,7 +128,7 @@ public class UsersInfoEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        UsersInfoEntity that = (UsersInfoEntity) o;
+        UsersInfo that = (UsersInfo) o;
 
         if (userInfoId != that.userInfoId) return false;
         if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;

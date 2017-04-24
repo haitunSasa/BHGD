@@ -33,7 +33,7 @@ public class BaseAction extends ErrCode{
         if (str == null || str.equals("")) {
             String errString = "报错：" + paramName + " 参数为空";
             flagP = 2;
-            printError(errString);
+            printErrorN(errString);
             return false;
         }
         return true;
@@ -122,10 +122,16 @@ public class BaseAction extends ErrCode{
         return new JSONObject();
     }
 
-    private void printError(String errStr) {
-        flagP = 2;
+    private void printErrorN(String errStr) {
         returnjsonP.put("flag", flagP);
-        returnjsonP.put("error", errStr);
+        returnjsonP.put("errCode", NULL_PARAMS);
+        returnjsonP.put("cause", errStr);
+        writeJson(returnjsonP);
+    }
+    private void printError(String errStr) {
+        returnjsonP.put("flag", flagP);
+        returnjsonP.put("errCode", SERVICE_ERR_INSIDE);
+        returnjsonP.put("cause", errStr);
         writeJson(returnjsonP);
     }
 

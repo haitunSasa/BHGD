@@ -8,7 +8,7 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name = "eavesdropper_answer", schema = "knowledge_sharing", catalog = "")
-public class EavesdropperAnswerEntity {
+public class EavesdropperAnswer {
     private int eavesdropperAnswerId;
     private Integer answerId;
     private Integer userId;
@@ -70,7 +70,7 @@ public class EavesdropperAnswerEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        EavesdropperAnswerEntity that = (EavesdropperAnswerEntity) o;
+        EavesdropperAnswer that = (EavesdropperAnswer) o;
 
         if (eavesdropperAnswerId != that.eavesdropperAnswerId) return false;
         if (answerId != null ? !answerId.equals(that.answerId) : that.answerId != null) return false;

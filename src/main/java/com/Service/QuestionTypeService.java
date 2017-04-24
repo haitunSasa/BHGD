@@ -1,9 +1,9 @@
 package com.Service;
 
-import com.Entity.QuestionTypeEntity;
+import com.Entity.QuestionType;
 
 /**
  * Created by liyan on 2017/4/16.
  */
-public interface QuestionTypeService extends BaseServiceI<QuestionTypeEntity> {
+public interface QuestionTypeService extends BaseServiceI<QuestionType> {
 }
