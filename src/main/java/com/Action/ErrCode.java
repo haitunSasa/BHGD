@@ -10,6 +10,7 @@ public class ErrCode {
     protected static final int NULL_PHONE_OR_NULL_PWD = 0x04;
     protected static final int WRONG_FORMAT = 0x05;
     protected static final int NO_QUESTION = 0x06;
+    protected static final int NO_ANSWER = 0x07;
     protected static final int NULL_PARAMS = 0x55;
     protected static final int SERVICE_ERR_INSIDE = 500;
 
@@ -34,6 +35,9 @@ public class ErrCode {
                 break;
             case NO_QUESTION:
                 cause = "无此问题或此问题已删";
+                break;
+            case NO_ANSWER:
+                cause = "还没有人回答此问题";
                 break;
             case NULL_PARAMS:
                 cause = "参数为空";

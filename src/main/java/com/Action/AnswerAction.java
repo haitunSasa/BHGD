@@ -1,11 +1,7 @@
 package com.Action;
 
-import com.Entity.Answer;
-import com.Entity.Question;
-import com.Entity.Users;
-import com.Service.AnswerService;
-import com.Service.QuestionService;
-import com.Service.UserService;
+import com.Entity.*;
+import com.Service.*;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.ServletResponseAware;
@@ -13,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,7 +25,11 @@ public class AnswerAction extends BaseAction implements ServletResponseAware {
     @Autowired
     UserService userService;
     @Autowired
+    UserInfoService userInfoService;
+    @Autowired
     QuestionService questionService;
+    @Autowired
+    EavesdropperAnswerService eavesdropperAnswerService;
     public void getAnswerCount() throws Exception {
         try {
             int userId = getIntFromGet("userId");
@@ -90,6 +91,48 @@ public class AnswerAction extends BaseAction implements ServletResponseAware {
             returnJson.put("cause",e.toString());
         }finally {
             returnJson.put("flag",flag);
+            writeJson(returnJson);
+        }
+    }
+
+    //获取问题的答案
+    public void getAnswer() throws Exception {
+        try {
+            int questionId = getIntFromGet("questionId");
+            //用户自己的Id
+            int userId = getIntFromGet("userId");
+            List<Answer> answerList = answerService.getByTagId(questionId, "questionId");
+            List<AnswerUser> answerUserList = new ArrayList<>();
+
+
+            if (answerList.isEmpty() || answerList.equals(null)) {
+                returnJson.put("errCode", NO_ANSWER);
+                returnJson.put("cause", printErrCause(NO_ANSWER));
+            } else {
+                for (Answer a : answerList) {
+                    AnswerUser answerUser = new AnswerUser();
+                    UsersInfo u = userInfoService.getByTagId(a.getUserId(), "userId").get(0);
+                    answerUser.setUserImg(u.getUserImg());
+                    answerUser.setUserName(u.getUserName());
+                    answerUser.setRole(u.getRole());
+                    if(a.getIsFree()==1||eavesdropperAnswerService.isAlreadyEavesdropper(userId,a.getAnswerId())) {
+                        answerUser.setAnswerId(a.getAnswerId());
+                        answerUser.setAnswerContent(a.getAnswerContent());
+                        answerUser.setAnswerTime(a.getAnswerTime());
+                        answerUser.setCouldListen(true);
+                    }else {
+                        answerUser.setCouldListen(false);
+                    }
+                    answerUserList.add(answerUser);
+                }
+                returnJson.put("objList", answerUserList);
+                flag = 1;
+            }
+        } catch (Exception e) {
+            returnJson.put("errCode", SERVICE_ERR_INSIDE);
+            returnJson.put("cause", e.toString());
+        } finally {
+            returnJson.put("flag", flag);
             writeJson(returnJson);
         }
     }

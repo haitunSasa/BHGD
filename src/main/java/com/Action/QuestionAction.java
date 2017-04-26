@@ -1,7 +1,7 @@
 package com.Action;
 
-import com.Entity.Question;
-import com.Entity.UsersInfo;
+import com.Entity.*;
+import com.Service.AnswerService;
 import com.Service.QuestionService;
 import com.Service.UserInfoService;
 import com.alibaba.fastjson.JSONObject;
@@ -13,6 +13,7 @@ import javax.servlet.ServletContainerInitializer;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,6 +29,8 @@ public class QuestionAction extends BaseAction implements ServletResponseAware {
     QuestionService questionService;
     @Autowired
     UserInfoService userInfoService;
+    @Autowired
+    AnswerService answerService;
 
     //提问问题
     public void askQuestion() throws Exception {
@@ -80,7 +83,24 @@ public class QuestionAction extends BaseAction implements ServletResponseAware {
     public void getLastQuestions() throws Exception {
         try {
             List<Question> questions = questionService.getQuestionOrderByTime();
-            returnJson.put("objList", questions);
+            List<QuestionUser> questionUserList = new ArrayList<>();
+            QuestionUser questionUser = new QuestionUser();
+            for (Question q : questions) {
+                questionUser.setUserId(q.getUserId());
+                questionUser.setQuestionContent(q.getQuestionContent());
+                questionUser.setQuestionIsAnswer(q.getQuestionIsAnswer());
+                questionUser.setQuestionTitle(q.getQuestionTitle());
+                questionUser.setQuestionId(q.getQuestionId());
+                questionUser.setQuestionReward(q.getQuestionReward());
+                questionUser.setQuestionTime(q.getQuestionTime());
+
+                UsersInfo u = userInfoService.getByTagId(q.getUserId(), "userId").get(0);
+                questionUser.setUserImg(u.getUserImg());
+                questionUser.setUserName(u.getUserName());
+                questionUser.setRole(u.getRole());
+                questionUserList.add(questionUser);
+            }
+            returnJson.put("objList", questionUserList);
             flag = 1;
         } catch (Exception e) {
             returnJson.put("errCode", SERVICE_ERR_INSIDE);
@@ -92,16 +112,33 @@ public class QuestionAction extends BaseAction implements ServletResponseAware {
     }
 
     //查看问题详情
-    public void getQuestionDetail() throws Exception{
+    public void getQuestionDetail() throws Exception {
         try {
-            int questionId= getIntFromGet("questionId");
-            Question question=questionService.getById(questionId);
-            if(question==null||question.equals("")){
+            int questionId = getIntFromGet("questionId");
+            Question q = questionService.getById(questionId);
+            if (q == null || q.equals("")) {
                 returnJson.put("errCode", NO_QUESTION);
                 returnJson.put("cause", printErrCause(NO_QUESTION));
-            }else {
-                returnJson.put("obj",question);
-                flag=1;
+            } else {
+                QuestionUser questionUser = new QuestionUser();
+
+                questionUser.setUserId(q.getUserId());
+                questionUser.setQuestionContent(q.getQuestionContent());
+                questionUser.setQuestionIsAnswer(q.getQuestionIsAnswer());
+                questionUser.setQuestionTitle(q.getQuestionTitle());
+                questionUser.setQuestionId(q.getQuestionId());
+                questionUser.setQuestionReward(q.getQuestionReward());
+                questionUser.setQuestionTime(q.getQuestionTime());
+
+                UsersInfo u = userInfoService.getByTagId(q.getUserId(), "userId").get(0);
+                questionUser.setUserImg(u.getUserImg());
+                questionUser.setUserName(u.getUserName());
+                questionUser.setRole(u.getRole());
+
+                returnJson.put("question", q);
+                returnJson.put("usersInfo", questionUser);
+                flag = 1;
+
             }
         } catch (Exception e) {
             returnJson.put("errCode", SERVICE_ERR_INSIDE);
@@ -111,6 +148,7 @@ public class QuestionAction extends BaseAction implements ServletResponseAware {
             writeJson(returnJson);
         }
     }
+
 
 
     @Override
