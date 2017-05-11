@@ -37,7 +37,7 @@ public class QuestionAction extends BaseAction implements ServletResponseAware {
         int userId;
         int questionTypeId;
         String questionContent;
-        String questionTitle;
+       // String questionTitle;
         int questionReward;
         try {
             JSONObject jsonObject = getJSONObjectFromJson();
@@ -45,13 +45,13 @@ public class QuestionAction extends BaseAction implements ServletResponseAware {
                 userId = getIntFromPost("userId");
                 questionTypeId = getIntFromPost("questionTypeId");
                 questionContent = getStringFromPost("questionContent");
-                questionTitle = getStringFromPost("questionTitle");
+               // questionTitle = getStringFromPost("questionTitle");
                 questionReward = getIntFromPost("questionReward");
             } else {
                 userId = jsonObject.getInteger("userId");
                 questionTypeId = jsonObject.getInteger("questionTypeId");
                 questionContent = jsonObject.getString("questionContent");
-                questionTitle = jsonObject.getString("questionTitle");
+                //questionTitle = jsonObject.getString("questionTitle");
                 questionReward = jsonObject.getInteger("questionReward");
             }
             List<UsersInfo> usersInfo = userInfoService.getByTagId(userId, "userId");
@@ -63,7 +63,7 @@ public class QuestionAction extends BaseAction implements ServletResponseAware {
                 question.setUserId(userId);
                 question.setQuestionTypeId(questionTypeId);
                 question.setQuestionContent(questionContent);
-                question.setQuestionTitle(questionTitle);
+                //question.setQuestionTitle(questionTitle);
                 question.setQuestionReward(questionReward);
                 question.setQuestionTime(new Timestamp(System.currentTimeMillis()));
                 question.setQuestionIsAnswer(0);
@@ -84,8 +84,9 @@ public class QuestionAction extends BaseAction implements ServletResponseAware {
         try {
             List<Question> questions = questionService.getQuestionOrderByTime();
             List<QuestionUser> questionUserList = new ArrayList<>();
-            QuestionUser questionUser = new QuestionUser();
+
             for (Question q : questions) {
+                QuestionUser questionUser = new QuestionUser();
                 questionUser.setUserId(q.getUserId());
                 questionUser.setQuestionContent(q.getQuestionContent());
                 questionUser.setQuestionIsAnswer(q.getQuestionIsAnswer());
@@ -100,7 +101,7 @@ public class QuestionAction extends BaseAction implements ServletResponseAware {
                 questionUser.setRole(u.getRole());
                 questionUserList.add(questionUser);
             }
-            returnJson.put("objList", questionUserList);
+            returnJson.put("data", questionUserList);
             flag = 1;
         } catch (Exception e) {
             returnJson.put("errCode", SERVICE_ERR_INSIDE);

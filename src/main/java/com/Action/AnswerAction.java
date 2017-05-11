@@ -125,7 +125,7 @@ public class AnswerAction extends BaseAction implements ServletResponseAware {
                     }
                     answerUserList.add(answerUser);
                 }
-                returnJson.put("objList", answerUserList);
+                returnJson.put("data", answerUserList);
                 flag = 1;
             }
         } catch (Exception e) {

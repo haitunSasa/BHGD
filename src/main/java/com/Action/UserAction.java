@@ -59,7 +59,7 @@ public class UserAction extends BaseAction implements ServletResponseAware {
                         userInfo.setToken(String.valueOf(System.currentTimeMillis()));
                         this.userInfoService.update(userInfo);
                         returnJson.put("success", "登陆成功");
-                        returnJson.put("userInfo", userInfoList.get(0));
+                        returnJson.put("data", userInfo);
                         flag = 1;
                     } else {
                         returnJson.put("errCode", WRONG_PASSWORD);
@@ -176,7 +176,7 @@ public class UserAction extends BaseAction implements ServletResponseAware {
                 returnJson.put("errCode", NO_USER);
                 returnJson.put("cause", printErrCause(NO_USER));
             } else {
-                returnJson.put("obj", userInfos.get(0));
+                returnJson.put("data", userInfos.get(0));
                 flag = 1;
             }
         } catch (Exception e) {
@@ -194,7 +194,7 @@ public class UserAction extends BaseAction implements ServletResponseAware {
             int userAccount = getIntFromGet("userId");
             UsersInfo usersInfo = userInfoService.getByTagId(userAccount, "userId").get(0);
             if (usersInfo != null) {
-                returnJson.put("obj", usersInfo);
+                returnJson.put("data", usersInfo);
                 flag = 1;
             } else {
                 returnJson.put("errCode", NO_USER);
@@ -225,7 +225,7 @@ public class UserAction extends BaseAction implements ServletResponseAware {
                 auEntity.setAuthenticateTime(new Timestamp(System.currentTimeMillis()));
                 authenticateService.save(auEntity);
 
-                returnJson.put("obj", usersInfo);
+                returnJson.put("data", usersInfo);
                 flag = 1;
             } else {
                 returnJson.put("errCode", NO_USER);
