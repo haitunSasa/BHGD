@@ -72,11 +72,6 @@ public class AnswerAction extends BaseAction implements ServletResponseAware {
                 returnJson.put("errCode",NO_QUESTION);
                 returnJson.put("cause",printErrCause(NO_QUESTION));
             }else if (answerList.equals("")||answerList.size()==0){
-                answerList.get(0).setAnswerContent(answerContent);
-                answerService.update(answerList.get(0));
-                flag=1;
-                returnJson.put("Mode","update");
-            }else {
                 Answer answer=new Answer();
                 answer.setAnswerContent(answerContent);
                 answer.setUserId(userId);
@@ -85,6 +80,11 @@ public class AnswerAction extends BaseAction implements ServletResponseAware {
                 answerService.save(answer);
                 flag=1;
                 returnJson.put("Mode","save");
+            }else {
+                answerList.get(0).setAnswerContent(answerContent);
+                answerService.update(answerList.get(0));
+                flag=1;
+                returnJson.put("Mode","update");
             }
         }catch (Exception e){
             returnJson.put("errCode",SERVICE_ERR_INSIDE);

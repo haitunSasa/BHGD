@@ -124,11 +124,12 @@ public class UserAction extends BaseAction implements ServletResponseAware {
                     usersInfo.setUserAccount(userAccount);
                     usersInfo.setToken(String.valueOf(System.currentTimeMillis()));
                     usersInfo.setUserId(saveUser.getUserId());
+                    usersInfo.setRole(1);
                     this.userInfoService.save(usersInfo);
                     UsersInfo saveUserInfo = this.userInfoService.getByTagString(userAccount, "userAccount").get(0);
 
                     returnJson.put("users", saveUser);
-                    returnJson.put("usersInfo", saveUserInfo);
+                    returnJson.put("data", saveUserInfo);
                     returnJson.put("success", "注册成功");
                     flag = 1;
                 }
