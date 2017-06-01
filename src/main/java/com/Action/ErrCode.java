@@ -11,6 +11,10 @@ public class ErrCode {
     protected static final int WRONG_FORMAT = 0x05;
     protected static final int NO_QUESTION = 0x06;
     protected static final int NO_ANSWER = 0x07;
+    protected static final int WRONG_TOKEN = 0x08;
+    protected static final int ALREADY_LISTENER=0x09;
+    protected static final int QUES_ANS_DEL=0x10;
+
     protected static final int NULL_PARAMS = 0x55;
     protected static final int SERVICE_ERR_INSIDE = 500;
 
@@ -38,6 +42,15 @@ public class ErrCode {
                 break;
             case NO_ANSWER:
                 cause = "还没有人回答此问题";
+                break;
+            case WRONG_TOKEN:
+                cause = "验证失败";
+                break;
+            case ALREADY_LISTENER:
+                cause = "已经可以听";
+                break;
+            case QUES_ANS_DEL:
+                cause = "问题或者答案已删除";
                 break;
             case NULL_PARAMS:
                 cause = "参数为空";

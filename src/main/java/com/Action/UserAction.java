@@ -7,6 +7,8 @@ import com.Service.AuthenticateService;
 import com.Service.UserInfoService;
 import com.Service.UserService;
 import com.alibaba.fastjson.JSONObject;
+import com.util.base.DateUtil;
+import com.util.base.TransformDate;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.ServletResponseAware;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -75,7 +78,7 @@ public class UserAction extends BaseAction implements ServletResponseAware {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            returnJson.put("errCode", 400);
+            returnJson.put("errCode", SERVICE_ERR_INSIDE);
             returnJson.put("cause", e.toString());
         } finally {
             returnJson.put("flag", flag);
@@ -124,7 +127,9 @@ public class UserAction extends BaseAction implements ServletResponseAware {
                     usersInfo.setUserAccount(userAccount);
                     usersInfo.setToken(String.valueOf(System.currentTimeMillis()));
                     usersInfo.setUserId(saveUser.getUserId());
-                    usersInfo.setRole(1);
+                    usersInfo.setRole(0);
+                    usersInfo.setUserSex((short)0);
+                    usersInfo.setUserbirthday(new Date(System.currentTimeMillis()));
                     this.userInfoService.save(usersInfo);
                     UsersInfo saveUserInfo = this.userInfoService.getByTagString(userAccount, "userAccount").get(0);
 
@@ -139,7 +144,7 @@ public class UserAction extends BaseAction implements ServletResponseAware {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            returnJson.put("errCode", SERVICE_ERR_INSIDE);
             returnJson.put("cause", e.toString());
         } finally {
             returnJson.put("flag", flag);
@@ -148,19 +153,21 @@ public class UserAction extends BaseAction implements ServletResponseAware {
     }
 
     //通过用户名搜索用户
+    //todo 需要改接口
     public void getByUserName() throws Exception {
         try {
-            String userName = getStringFromGet("userName");
-            List<UsersInfo> userInfos = this.userInfoService.getByTagString(userName, "userName");
-            if (userInfos == null && userInfos.size() == 0) {
+            String key = getStringFromGet("key");
+            List<UsersInfo> usersInfoList=this.userInfoService.findUserByKey(key);
+
+            if (usersInfoList == null && usersInfoList.size() == 0) {
                 returnJson.put("errCode", NO_USER);
                 returnJson.put("cause", printErrCause(NO_USER));
             } else {
                 flag = 1;
-                returnJson.put("obj", userInfos.get(0));
+                returnJson.put("data", usersInfoList);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            returnJson.put("errCode", SERVICE_ERR_INSIDE);
             returnJson.put("cause", e.toString());
         } finally {
             returnJson.put("flag", flag);
@@ -177,11 +184,11 @@ public class UserAction extends BaseAction implements ServletResponseAware {
                 returnJson.put("errCode", NO_USER);
                 returnJson.put("cause", printErrCause(NO_USER));
             } else {
-                returnJson.put("data", userInfos.get(0));
+                returnJson.put("data", userInfos);
                 flag = 1;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            returnJson.put("errCode", SERVICE_ERR_INSIDE);
             returnJson.put("cause", e.toString());
         } finally {
             returnJson.put("flag", flag);
@@ -192,23 +199,81 @@ public class UserAction extends BaseAction implements ServletResponseAware {
     //获取用户信息
     public void getUserInfo() throws Exception {
         try {
-            int userAccount = getIntFromGet("userId");
-            UsersInfo usersInfo = userInfoService.getByTagId(userAccount, "userId").get(0);
-            if (usersInfo != null) {
-                returnJson.put("data", usersInfo);
-                flag = 1;
+            int userId = getIntFromGet("userId");
+            String token = getStringFromGet("token");
+            List<UsersInfo> usersInfo = userInfoService.getByTagId(userId, "userId");
+            if (usersInfo != null && !usersInfo.isEmpty()) {
+                usersInfo= userInfoService.getUserInfo(userId,token);
+                if (usersInfo != null && !usersInfo.isEmpty()) {
+                    returnJson.put("data", usersInfo.get(0));
+                    flag = 1;
+                }else {
+                    returnJson.put("errCode", WRONG_TOKEN);
+                    returnJson.put("cause", printErrCause(WRONG_TOKEN));
+                }
             } else {
                 returnJson.put("errCode", NO_USER);
                 returnJson.put("cause", printErrCause(NO_USER));
             }
         } catch (Exception e) {
             e.printStackTrace();
+            returnJson.put("errCode", SERVICE_ERR_INSIDE);
             returnJson.put("cause", e.toString());
         } finally {
             returnJson.put("flag", flag);
             writeJson(returnJson);
         }
     }
+
+    //修改用户信息
+    public void changeInfo() throws Exception{
+        int userId;
+        String token;
+         /* 修改内容 */
+        String birthday = "";
+        String name = "NoName";
+        int sex = 0;
+        try {
+            JSONObject jsonObject = getJSONObjectFromJson();
+            if (jsonObject == null) {
+                userId = getIntFromPost("userId");
+                birthday = getStringFromPost("userbirthday");
+                name = getStringFromPost("userName");
+                sex = getIntFromPost("userSex");
+                token = getStringFromPost("token");
+            } else {
+                userId = jsonObject.getInteger("userId");
+                birthday = jsonObject.getString("userbirthday");
+                name = jsonObject.getString("userName");
+                sex = jsonObject.getIntValue("userSex");
+                token = jsonObject.getString("token");
+            }
+            List<UsersInfo> usersInfoList=userInfoService.getByTagId(userId,"userId");
+            if(!usersInfoList.isEmpty()){
+                UsersInfo u=usersInfoList.get(0);
+                if(u.getToken().equals(token)){
+                    u.setUserSex((short)sex);
+                    u.setUserbirthday(TransformDate.Str2Date(birthday));
+                    u.setUserName(name);
+                    userInfoService.update(u);
+                    flag=1;
+                    returnJson.put("data",u);
+                }else {
+                    returnJson.put("errCode", WRONG_TOKEN);
+                    returnJson.put("cause", printErrCause(WRONG_TOKEN));
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            returnJson.put("errCode", SERVICE_ERR_INSIDE);
+            returnJson.put("cause", e.toString());
+        }finally {
+            returnJson.put("flag", flag);
+            writeJson(returnJson);
+        }
+
+    }
+
 
     //认证专家
     public void applyAuthenticate() throws Exception {
@@ -234,6 +299,7 @@ public class UserAction extends BaseAction implements ServletResponseAware {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            returnJson.put("errCode", SERVICE_ERR_INSIDE);
             returnJson.put("cause", e.toString());
         } finally {
             returnJson.put("flag", flag);

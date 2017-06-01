@@ -86,7 +86,7 @@ public class AnswerUser {
         return isCouldListen;
     }
 
-    public void setCouldListen(boolean couldListen) {
-        isCouldListen = couldListen;
+    public void setIsCouldListen(boolean isCouldListen) {
+        this.isCouldListen = isCouldListen;
     }
 }

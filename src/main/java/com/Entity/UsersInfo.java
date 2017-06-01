@@ -1,11 +1,12 @@
 package com.Entity;
 
 import javax.persistence.*;
-import java.sql.Date;
+//import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.Date;
 
 /**
- * Created by liyan on 2017/4/16.
+ * Created by liyan on 2017/5/18.
  */
 @Entity
 @Table(name = "users_info", schema = "knowledge_sharing", catalog = "")
@@ -123,44 +124,6 @@ public class UsersInfo {
         this.userReward = userReward;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        UsersInfo that = (UsersInfo) o;
-
-        if (userInfoId != that.userInfoId) return false;
-        if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
-        if (userAccount != null ? !userAccount.equals(that.userAccount) : that.userAccount != null) return false;
-        if (userSex != null ? !userSex.equals(that.userSex) : that.userSex != null) return false;
-        if (userbirthday != null ? !userbirthday.equals(that.userbirthday) : that.userbirthday != null) return false;
-        if (userIntroduction != null ? !userIntroduction.equals(that.userIntroduction) : that.userIntroduction != null)
-            return false;
-        if (userRegisterTime != null ? !userRegisterTime.equals(that.userRegisterTime) : that.userRegisterTime != null)
-            return false;
-        if (userImg != null ? !userImg.equals(that.userImg) : that.userImg != null) return false;
-        if (token != null ? !token.equals(that.token) : that.token != null) return false;
-        if (userReward != null ? !userReward.equals(that.userReward) : that.userReward != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = userInfoId;
-        result = 31 * result + (userId != null ? userId.hashCode() : 0);
-        result = 31 * result + (userAccount != null ? userAccount.hashCode() : 0);
-        result = 31 * result + (userSex != null ? userSex.hashCode() : 0);
-        result = 31 * result + (userbirthday != null ? userbirthday.hashCode() : 0);
-        result = 31 * result + (userIntroduction != null ? userIntroduction.hashCode() : 0);
-        result = 31 * result + (userRegisterTime != null ? userRegisterTime.hashCode() : 0);
-        result = 31 * result + (userImg != null ? userImg.hashCode() : 0);
-        result = 31 * result + (token != null ? token.hashCode() : 0);
-        result = 31 * result + (userReward != null ? userReward.hashCode() : 0);
-        return result;
-    }
-
     @Basic
     @Column(name = "userName")
     public String getUserName() {
@@ -179,5 +142,49 @@ public class UsersInfo {
 
     public void setRole(Integer role) {
         this.role = role;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UsersInfo usersInfo = (UsersInfo) o;
+
+        if (userInfoId != usersInfo.userInfoId) return false;
+        if (userId != null ? !userId.equals(usersInfo.userId) : usersInfo.userId != null) return false;
+        if (userAccount != null ? !userAccount.equals(usersInfo.userAccount) : usersInfo.userAccount != null)
+            return false;
+        if (userSex != null ? !userSex.equals(usersInfo.userSex) : usersInfo.userSex != null) return false;
+        if (userbirthday != null ? !userbirthday.equals(usersInfo.userbirthday) : usersInfo.userbirthday != null)
+            return false;
+        if (userIntroduction != null ? !userIntroduction.equals(usersInfo.userIntroduction) : usersInfo.userIntroduction != null)
+            return false;
+        if (userRegisterTime != null ? !userRegisterTime.equals(usersInfo.userRegisterTime) : usersInfo.userRegisterTime != null)
+            return false;
+        if (userImg != null ? !userImg.equals(usersInfo.userImg) : usersInfo.userImg != null) return false;
+        if (token != null ? !token.equals(usersInfo.token) : usersInfo.token != null) return false;
+        if (userReward != null ? !userReward.equals(usersInfo.userReward) : usersInfo.userReward != null) return false;
+        if (userName != null ? !userName.equals(usersInfo.userName) : usersInfo.userName != null) return false;
+        if (role != null ? !role.equals(usersInfo.role) : usersInfo.role != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = userInfoId;
+        result = 31 * result + (userId != null ? userId.hashCode() : 0);
+        result = 31 * result + (userAccount != null ? userAccount.hashCode() : 0);
+        result = 31 * result + (userSex != null ? userSex.hashCode() : 0);
+        result = 31 * result + (userbirthday != null ? userbirthday.hashCode() : 0);
+        result = 31 * result + (userIntroduction != null ? userIntroduction.hashCode() : 0);
+        result = 31 * result + (userRegisterTime != null ? userRegisterTime.hashCode() : 0);
+        result = 31 * result + (userImg != null ? userImg.hashCode() : 0);
+        result = 31 * result + (token != null ? token.hashCode() : 0);
+        result = 31 * result + (userReward != null ? userReward.hashCode() : 0);
+        result = 31 * result + (userName != null ? userName.hashCode() : 0);
+        result = 31 * result + (role != null ? role.hashCode() : 0);
+        return result;
     }
 }

@@ -29,7 +29,7 @@ public class AnswerAction extends BaseAction implements ServletResponseAware {
     @Autowired
     QuestionService questionService;
     @Autowired
-    EavesdropperAnswerService eavesdropperAnswerService;
+    EavesdropperService eavesdropperAnswerService;
     public void getAnswerCount() throws Exception {
         try {
             int userId = getIntFromGet("userId");
@@ -76,6 +76,7 @@ public class AnswerAction extends BaseAction implements ServletResponseAware {
                 answer.setAnswerContent(answerContent);
                 answer.setUserId(userId);
                 answer.setQuestionId(questionId);
+                answer.setIsFree((short) 1);
                 answer.setAnswerTime(new Timestamp(System.currentTimeMillis()));
                 answerService.save(answer);
                 flag=1;
@@ -104,26 +105,33 @@ public class AnswerAction extends BaseAction implements ServletResponseAware {
             List<Answer> answerList = answerService.getByTagId(questionId, "questionId");
             List<AnswerUser> answerUserList = new ArrayList<>();
 
-
-            if (answerList.isEmpty() || answerList.equals(null)) {
+            if (answerList.isEmpty()) {
                 returnJson.put("errCode", NO_ANSWER);
                 returnJson.put("cause", printErrCause(NO_ANSWER));
             } else {
                 for (Answer a : answerList) {
                     AnswerUser answerUser = new AnswerUser();
-                    UsersInfo u = userInfoService.getByTagId(a.getUserId(), "userId").get(0);
-                    answerUser.setUserImg(u.getUserImg());
-                    answerUser.setUserName(u.getUserName());
-                    answerUser.setRole(u.getRole());
-                    if(a.getIsFree()==1||eavesdropperAnswerService.isAlreadyEavesdropper(userId,a.getAnswerId())) {
-                        answerUser.setAnswerId(a.getAnswerId());
-                        answerUser.setAnswerContent(a.getAnswerContent());
-                        answerUser.setAnswerTime(a.getAnswerTime());
-                        answerUser.setCouldListen(true);
+                    List<UsersInfo> usersInfo = userInfoService.getByTagId(a.getUserId(), "userId");
+                    if (!usersInfo.isEmpty()) {
+                        UsersInfo u=usersInfo.get(0);
+                        answerUser.setUserImg(u.getUserImg());
+                        answerUser.setUserName(u.getUserName());
+                        answerUser.setRole(u.getRole());
+                        if (a.getIsFree() == 1 || eavesdropperAnswerService.isAlreadyEavesdropper(userId, a.getAnswerId())) {
+                            answerUser.setAnswerId(a.getAnswerId());
+                            answerUser.setAnswerContent(a.getAnswerContent());
+                            answerUser.setAnswerTime(a.getAnswerTime());
+                            answerUser.setIsCouldListen(true);
+                        } else {
+                            answerUser.setAnswerId(a.getAnswerId());
+                            answerUser.setAnswerTime(a.getAnswerTime());
+                            answerUser.setIsCouldListen(false);
+                        }
+                        answerUserList.add(answerUser);
                     }else {
-                        answerUser.setCouldListen(false);
+                        returnJson.put("errCode", NO_USER);
+                        returnJson.put("cause", printErrCause(NO_USER));
                     }
-                    answerUserList.add(answerUser);
                 }
                 returnJson.put("data", answerUserList);
                 flag = 1;

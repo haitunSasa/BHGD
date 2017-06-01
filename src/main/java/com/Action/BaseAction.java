@@ -27,7 +27,6 @@ public class BaseAction extends ErrCode{
             e.printStackTrace();
         }
     }
-
     //检测字符串的合法性
     public boolean checkString(String str, String paramName) {
         if (str == null || str.equals("")) {
