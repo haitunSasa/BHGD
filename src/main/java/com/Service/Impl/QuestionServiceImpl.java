@@ -23,4 +23,11 @@ public class QuestionServiceImpl extends BaseServiceImpl<Question>implements Que
         questionList=dao.find(sql);
         return questionList;
     }
+
+    @Override
+    public List<Question> getQuestionByKey(String key) {
+        String sql="select t from Question t where t.questionContent like '%"+key+"%')";
+        questionList = this.dao.find(sql);
+        return questionList;
+    }
 }

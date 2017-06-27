@@ -9,4 +9,5 @@ import java.util.List;
  */
 public interface QuestionService extends BaseServiceI<Question>{
     List<Question> getQuestionOrderByTime();
+    List<Question> getQuestionByKey(String key);
 }

@@ -25,7 +25,7 @@ public class FollowServiceImpl extends BaseServiceImpl<Follow> implements Follow
         Map<String,Object> params = new HashMap<>();
         params.put("userId",userId);
         params.put("followId",followId);
-        String sql="select t from Follow t where t.fromUserId:=userId and t.toUserId:=followId)";
+        String sql="select t from Follow t where t.fromUserId:=userId and t.toUserId:=followId";
         followList = this.dao.find(sql,params);
         return followList;
     }

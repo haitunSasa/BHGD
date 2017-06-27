@@ -82,6 +82,11 @@
         <action name="follow_*" class="com.Action.FollowAction" method="{1}">
             <result type="json"></result>
         </action>
+
+        <!-- 推荐板块  -->
+        <action name="recommend_*" class="com.Action.RecommendAction" method="{1}">
+            <result type="json"></result>
+        </action>
     </package>
 
     <!-- 移动端配置 继承json-default -->

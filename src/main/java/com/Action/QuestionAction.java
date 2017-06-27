@@ -2,6 +2,7 @@ package com.Action;
 
 import com.Entity.*;
 import com.Service.AnswerService;
+import com.Service.InterestService;
 import com.Service.QuestionService;
 import com.Service.UserInfoService;
 import com.alibaba.fastjson.JSONObject;
@@ -15,6 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by liyan on 2017/4/16.
@@ -31,13 +34,15 @@ public class QuestionAction extends BaseAction implements ServletResponseAware {
     UserInfoService userInfoService;
     @Autowired
     AnswerService answerService;
+    @Autowired
+    private InterestService interestService;
 
     //提问问题
     public void askQuestion() throws Exception {
         int userId;
         int questionTypeId;
         String questionContent;
-       // String questionTitle;
+        // String questionTitle;
         int questionReward;
         try {
             JSONObject jsonObject = getJSONObjectFromJson();
@@ -45,7 +50,7 @@ public class QuestionAction extends BaseAction implements ServletResponseAware {
                 userId = getIntFromPost("userId");
                 questionTypeId = getIntFromPost("questionTypeId");
                 questionContent = getStringFromPost("questionContent");
-               // questionTitle = getStringFromPost("questionTitle");
+                // questionTitle = getStringFromPost("questionTitle");
                 questionReward = getIntFromPost("questionReward");
             } else {
                 userId = jsonObject.getInteger("userId");
@@ -150,6 +155,50 @@ public class QuestionAction extends BaseAction implements ServletResponseAware {
         }
     }
 
+
+    public void recommend() throws Exception {
+        try {
+            int userId = getIntFromGet("userId");
+            List<Interest> interestList = this.interestService.getByNU(userId);
+            if (interestList != null && !interestList.isEmpty()) {
+                //过滤问题
+                Set<Integer> set = new TreeSet<>();
+                for (Interest interest : interestList) {
+                    set.add(interest.getQuestionId());
+                }
+                List<QuestionUser> questionUserList = new ArrayList<>();
+                for (Integer i : set) {
+                    Question q = questionService.getByTagId(i, "questionId").get(0);
+
+                    QuestionUser questionUser = new QuestionUser();
+                    questionUser.setUserId(q.getUserId());
+                    questionUser.setQuestionContent(q.getQuestionContent());
+                    questionUser.setQuestionIsAnswer(q.getQuestionIsAnswer());
+                    questionUser.setQuestionTitle(q.getQuestionTitle());
+                    questionUser.setQuestionId(q.getQuestionId());
+                    questionUser.setQuestionReward(q.getQuestionReward());
+                    questionUser.setQuestionTime(q.getQuestionTime());
+
+                    UsersInfo u = userInfoService.getByTagId(q.getUserId(), "userId").get(0);
+                    questionUser.setUserImg(u.getUserImg());
+                    questionUser.setUserName(u.getUserName());
+                    questionUser.setRole(u.getRole());
+                    questionUserList.add(questionUser);
+                }
+                returnJson.put("data", questionUserList);
+                flag = 1;
+            } else {
+                returnJson.put("errCode", NO_RECOMMEND);
+                returnJson.put("cause", printErrCause(NO_RECOMMEND));
+            }
+        } catch (Exception e) {
+            returnJson.put("errCode", SERVICE_ERR_INSIDE);
+            returnJson.put("cause", e.toString());
+        } finally {
+            returnJson.put("flag", flag);
+            writeJson(returnJson);
+        }
+    }
 
 
     @Override

@@ -24,6 +24,10 @@ public class UsersInfo {
     private String userName;
     private Integer role;
 
+    public void setUserbirthday(java.sql.Date userbirthday) {
+        this.userbirthday = userbirthday;
+    }
+
     @Id
     @Column(name = "userInfoId")
     public int getUserInfoId() {

@@ -1,11 +1,7 @@
 package com.Action;
 
-import com.Entity.Authentication;
-import com.Entity.Users;
-import com.Entity.UsersInfo;
-import com.Service.AuthenticateService;
-import com.Service.UserInfoService;
-import com.Service.UserService;
+import com.Entity.*;
+import com.Service.*;
 import com.alibaba.fastjson.JSONObject;
 import com.util.base.DateUtil;
 import com.util.base.TransformDate;
@@ -15,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,8 +31,10 @@ public class UserAction extends BaseAction implements ServletResponseAware {
     private UserInfoService userInfoService;
     @Autowired
     private AuthenticateService authenticateService;
-    private List<UserAction> list = new ArrayList<>();
-
+    @Autowired
+    private QuestionService questionService;
+    @Autowired
+    private ClickRecordService clickRecordService;
 
     //登陆
     public void login() throws Exception {
@@ -129,7 +125,7 @@ public class UserAction extends BaseAction implements ServletResponseAware {
                     usersInfo.setUserId(saveUser.getUserId());
                     usersInfo.setRole(0);
                     usersInfo.setUserSex((short)0);
-                    usersInfo.setUserbirthday(new Date(System.currentTimeMillis()));
+                    usersInfo.setUserbirthday((java.sql.Date) new Date(System.currentTimeMillis()));
                     this.userInfoService.save(usersInfo);
                     UsersInfo saveUserInfo = this.userInfoService.getByTagString(userAccount, "userAccount").get(0);
 
@@ -165,6 +161,7 @@ public class UserAction extends BaseAction implements ServletResponseAware {
             } else {
                 flag = 1;
                 returnJson.put("data", usersInfoList);
+                //returnJson.put("userInfo", usersInfoList);
             }
         } catch (Exception e) {
             returnJson.put("errCode", SERVICE_ERR_INSIDE);
@@ -175,16 +172,33 @@ public class UserAction extends BaseAction implements ServletResponseAware {
         }
     }
 
-    //通过用户账户搜索用户
-    public void getByUserAccount() throws Exception {
+    //通过key搜索问题
+    public void getQuestionByKey() throws Exception {
         try {
-            String userAccount = getStringFromGet("userAccount");
-            List<UsersInfo> userInfos = this.userInfoService.getByTagString(userAccount, "userAccount");
-            if (userInfos == null && userInfos.size() == 0) {
-                returnJson.put("errCode", NO_USER);
-                returnJson.put("cause", printErrCause(NO_USER));
+            String key = getStringFromGet("key");
+            List<Question> questionList = this.questionService.getQuestionByKey(key);
+            if (questionList == null && questionList.size() == 0) {
+                returnJson.put("errCode", NO_QUESTION);
+                returnJson.put("cause", printErrCause(NO_QUESTION));
             } else {
-                returnJson.put("data", userInfos);
+                List<QuestionUser> questionUserList = new ArrayList<>();
+                for (Question q : questionList) {
+                    QuestionUser questionUser = new QuestionUser();
+                    questionUser.setQuestionContent(q.getQuestionContent());
+                    questionUser.setUserId(q.getUserId());
+                    questionUser.setQuestionIsAnswer(q.getQuestionIsAnswer());
+                    questionUser.setQuestionTitle(q.getQuestionTitle());
+                    questionUser.setQuestionId(q.getQuestionId());
+                    questionUser.setQuestionReward(q.getQuestionReward());
+                    questionUser.setQuestionTime(q.getQuestionTime());
+
+                    UsersInfo u = userInfoService.getByTagId(q.getUserId(), "userId").get(0);
+                    questionUser.setUserImg(u.getUserImg());
+                    questionUser.setUserName(u.getUserName());
+                    questionUser.setRole(u.getRole());
+                    questionUserList.add(questionUser);
+                }
+                returnJson.put("data", questionUserList);
                 flag = 1;
             }
         } catch (Exception e) {
@@ -253,7 +267,7 @@ public class UserAction extends BaseAction implements ServletResponseAware {
                 UsersInfo u=usersInfoList.get(0);
                 if(u.getToken().equals(token)){
                     u.setUserSex((short)sex);
-                    u.setUserbirthday(TransformDate.Str2Date(birthday));
+                    u.setUserbirthday((java.sql.Date) TransformDate.Str2Date(birthday));
                     u.setUserName(name);
                     userInfoService.update(u);
                     flag=1;
@@ -306,6 +320,51 @@ public class UserAction extends BaseAction implements ServletResponseAware {
             writeJson(returnJson);
         }
     }
+
+    //用户的点击行为
+    public void getUserAction()throws Exception{
+        int userId;
+        int questionId;
+        try {
+            userId= getIntFromGet("userId");
+            questionId = getIntFromGet("questionId");
+            Users user=userService.getById(userId);
+
+            if (user==null){
+                returnJson.put("errCode", NO_USER);
+                returnJson.put("cause", printErrCause(NO_USER));
+                return;
+            }
+            Question question=questionService.getById(questionId);
+            if (question==null){
+                returnJson.put("errCode", NO_QUESTION);
+                returnJson.put("cause", printErrCause(NO_QUESTION));
+                return;
+            }
+            List<ClickRecord> clickRecordList=clickRecordService.check(userId,questionId);
+            if(!clickRecordList.isEmpty()){
+                int count = clickRecordList.get(0).getCount();
+                clickRecordList.get(0).setCount(++count);
+                clickRecordService.update(clickRecordList.get(0));
+                flag=1;
+            }else {
+                ClickRecord clickRecord = new ClickRecord();
+                clickRecord.setCount(1);
+                clickRecord.setQuestionId(questionId);
+                clickRecord.setUserId(userId);
+                clickRecordService.save(clickRecord);
+                flag=1;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            returnJson.put("errCode", SERVICE_ERR_INSIDE);
+            returnJson.put("cause", e.toString());
+        } finally {
+            returnJson.put("flag", flag);
+            writeJson(returnJson);
+        }
+    }
+
 
 
     @Override
